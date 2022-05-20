@@ -65,3 +65,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete templateVars['urls'][req.params.shortURL]
   res.render("urls_index", templateVars);
 });
+
+app.post("/urls/:id", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  templateVars['urls'][req.params.shortURL] = 
+  res.render("urls_index", templateVars);
+});
