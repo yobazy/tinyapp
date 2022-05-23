@@ -95,7 +95,6 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/login", (req, res) => {
   // res.cookie('user', req.body['user_id'])
-
   let userID = req.cookies['user_id']
   let inputEmail = req.body['email']
   let userAcc = users[userID]
@@ -128,11 +127,29 @@ app.post("/logout", (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  let id = generateRandomString()
-  res.cookie('user_id', id)
-  
   let emailAdd = req.body.email
   let passwordAdd = req.body.password
+  console.log('bool', (emailAdd || passwordAdd))
+
+  if(!(emailAdd || passwordAdd)) {
+    res.status(400)
+    return res.redirect('/urls');
+  }
+  
+  for (let user in users) {
+    console.log(user)
+    let sysEmail = users[user]['email']
+    console.log('sysEmail', sysEmail)
+    if(sysEmail === emailAdd) {
+      console.log('added already')
+      res.status(400)
+      return res.redirect('/urls');
+    }
+  }
+  
+  let id = generateRandomString()
+  res.cookie('user_id', id)
+
   users[id] = {}
   users[id]['id'] = id
   users[id]['email'] = emailAdd;
