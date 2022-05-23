@@ -101,12 +101,12 @@ app.post("/login", (req, res) => {
   // res.cookie('user', req.body['user_id'])
   let userID = req.cookies['user_id']
   let inputEmail = req.body['email']
+  let inputPass = req.body['password']
   let userAcc = users[userID]
   console.log(userAcc)
   let sysEmail = ''
   if(typeof userAcc != 'undefined')  {
     sysEmail = userAcc['email']
-    console.log('sys', sysEmail)
   }
   console.log('input', inputEmail)
 
@@ -114,10 +114,12 @@ app.post("/login", (req, res) => {
     urls: urlDatabase
   };
 
-  if (inputEmail === sysEmail) {
-    templateVars['user'] = userAcc;
-  // console.log(templateVars)
+  if (inputEmail === sysEmail && inputPass === userAcc['password']) {
+      templateVars['user'] = userAcc;
+  } else  {
+    res.status(403)
   }
+  res.cookie('user_id', userAcc['id'])
   res.render("urls_index", templateVars); 
 });
 
