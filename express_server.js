@@ -67,3 +67,34 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete templateVars['urls'][req.params.shortURL]
   res.render("urls_index", templateVars);
 });
+
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.body.shortURL] = req.body['longURL']
+  const templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
+});
+
+app.post("/login", (req, res) => {
+  res.cookie('username', req.body['username'])
+  const templateVars = {
+    username: req.body.username,
+    urls: urlDatabase
+  };
+  // res.render("urls_index", templateVars);
+  res.render("urls_index", templateVars);
+});
+
+// const templateVars = {
+//   username: req.cookies["username"],
+//   // ... any other vars
+// };
+// res.render("urls_index", templateVars);
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('username', req.body.username)
+  const templateVars = {
+    urls: urlDatabase
+  };
+  res.render("urls_index", templateVars);
+  res.redirect(`/urls`);
+});
