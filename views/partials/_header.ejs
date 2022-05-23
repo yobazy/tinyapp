@@ -11,14 +11,14 @@
         <form name='username' method="POST" action="/login"></form>
       </div>
       <div>
-        <% if(typeof username !== 'undefined'){ %>
-          <h3>Logged in as: <%= username %></h1>
+        <% if(typeof user !== 'undefined'){ %>
+          <h3>Logged in as: <%= user.email %></h1>
           <form method='POST' action='/logout'>
             <input type='submit' value='logout'>
           </form>
         <% } else{ %>  
           <form method="POST" action="/login">
-            <input type="text" name="username">
+            <input type="text" name="email">
             <input type="submit" value="Submit">
           </form>
         <% } %>

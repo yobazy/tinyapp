@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const { redirect } = require("express/lib/response");
 
 function generateRandomString() {
@@ -10,6 +11,7 @@ function generateRandomString() {
 }
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
@@ -17,6 +19,23 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
+app.get("/register", (req, res) => {
+  res.render("register");
+});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -75,26 +94,48 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie('username', req.body['username'])
+  // res.cookie('user', req.body['user_id'])
+
+  let userID = req.cookies['user_id']
+  let inputEmail = req.body['email']
+  let userAcc = users[userID]
+  console.log(userAcc)
+  let sysEmail = ''
+  if(typeof userAcc != 'undefined')  {
+    sysEmail = userAcc['email']
+    console.log('sys', sysEmail)
+  }
+  console.log('input', inputEmail)
+
   const templateVars = {
-    username: req.body.username,
     urls: urlDatabase
   };
-  // res.render("urls_index", templateVars);
-  res.render("urls_index", templateVars);
+
+  if (inputEmail === sysEmail) {
+    templateVars['user'] = userAcc;
+  // console.log(templateVars)
+  }
+  res.render("urls_index", templateVars); 
 });
 
-// const templateVars = {
-//   username: req.cookies["username"],
-//   // ... any other vars
-// };
-// res.render("urls_index", templateVars);
-
 app.post("/logout", (req, res) => {
-  res.clearCookie('username', req.body.username)
+  res.clearCookie('user_id', req.body.user_id)
   const templateVars = {
     urls: urlDatabase
   };
   res.render("urls_index", templateVars);
   res.redirect(`/urls`);
+});
+
+app.post('/register', (req, res) => {
+  let id = generateRandomString()
+  res.cookie('user_id', id)
+  
+  let emailAdd = req.body.email
+  let passwordAdd = req.body.password
+  users[id] = {}
+  users[id]['id'] = id
+  users[id]['email'] = emailAdd;
+  users[id]['password'] = passwordAdd;
+  res.redirect('/urls')
 });
