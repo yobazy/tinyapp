@@ -1,0 +1,9 @@
+<% if(typeof username !== 'undefined'){ %>
+    <h1>username</h1>
+    <h1><%= username %></h1>
+    <form method='POST' action='/logout'>
+      <input type='button' value='logout'>
+    </form>
+  <% } else{ %>  
+    <h1>bar</h1>
+  <% } %>
