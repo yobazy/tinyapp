@@ -17,9 +17,11 @@
             <input type='submit' value='logout'>
           </form>
         <% } else{ %>  
-          <form method="POST" action="/login">
-            <input type="text" name="email">
-            <input type="submit" value="Submit">
+          <form method="GET" action="/login">
+            <input type="submit" value="login">
+          </form>
+          <form method="GET" action="/register">
+            <input type="submit" value="register">
           </form>
         <% } %>
       </div>

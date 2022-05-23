@@ -37,6 +37,10 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -146,7 +150,7 @@ app.post('/register', (req, res) => {
       return res.redirect('/urls');
     }
   }
-  
+
   let id = generateRandomString()
   res.cookie('user_id', id)
 
