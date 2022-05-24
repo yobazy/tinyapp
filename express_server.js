@@ -7,6 +7,9 @@ const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
 const getUserByEmail = require('./helpers')
 
+//login status
+let loggedIn = false;
+
 function generateRandomString() {
   let genString = Math.random().toString(36).slice(2,8)
   return genString
@@ -22,7 +25,6 @@ const urlDatabase = {
         userID: "aJ48l2"
     }
 };
-
 
 const users = { 
   "userRandomID": {
@@ -69,7 +71,11 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if(loggedIn) {
+    res.redirect("/urls")
+  } else {
+    res.redirect("/login")
+  }
 });
 
 app.listen(PORT, () => {
@@ -85,9 +91,18 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  if (!loggedIn)  {
+    res.status(400).send('please log in')
+  }
+  let asd = req.session.user_ID
   let id = req.session['userID']
+  console.log('id',id)
+  console.log('swagg',asd)
+
   let userUrlObj = urlsForUser(id)
-  console.log(userUrlObj)
+
+  console.log(urlsForUser)
+
   const templateVars = { urls: userUrlObj };
   res.render("urls_index", templateVars);
 });
@@ -130,6 +145,7 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  console.log(loggedIn)
   let userID = req.session.user_id
   let userAcc = users[userID]
 
@@ -144,17 +160,20 @@ app.post("/login", (req, res) => {
 
   if(typeof userAcc == 'undefined')  {
     // res.render("urls_index", templateVars);
-    res.status(403).send('No user with that email/pass')
-    return res.redirect('/login');
+    console.log(loggedIn)
+    return res.status(403).send('No user with that email/pass')
   }
   sysEmail = userAcc['email']
 
   if (inputEmail === sysEmail && bcrypt.compareSync(inputPass, userAcc['password'])) {
       templateVars['user'] = userAcc;
   } else  {
-    res.status(403).send('No user with that email/pass')
+    console.log(loggedIn)
+    return res.status(403).send('No user with that email/pass')
   }
-  
+  loggedIn = true;
+  console.log(loggedIn)
+
   res.render("urls_index", templateVars); 
   res.redirect('/urls');
 });
