@@ -143,21 +143,23 @@ app.post("/login", (req, res) => {
   };
 
   if(typeof userAcc == 'undefined')  {
-    return res.render("urls_index", templateVars);
+    // res.render("urls_index", templateVars);
+    res.status(403).send('No user with that email/pass')
+    return res.redirect('/login');
   }
   sysEmail = userAcc['email']
 
   if (inputEmail === sysEmail && bcrypt.compareSync(inputPass, userAcc['password'])) {
       templateVars['user'] = userAcc;
   } else  {
-    res.status(403)
+    res.status(403).send('No user with that email/pass')
   }
   
   res.render("urls_index", templateVars); 
+  res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id', req.body.user_id)
   const templateVars = {
     urls: urlDatabase
   };
@@ -168,20 +170,21 @@ app.post("/logout", (req, res) => {
 app.post('/register', (req, res) => {
   let emailAdd = req.body.email
   let pass = req.body.password
-  let passwordAdd = bcrypt.hashSync(pass, 10);
+  let passwordEncrypt = bcrypt.hashSync(pass, 10);
 
-  if(!(emailAdd || pass)) {
-    console.log('need to fill in data')
-    res.status(400)
-    return res.redirect('/urls');
+  // check if either strings are empty
+  if(emailAdd === '' || pass === '') {
+
+    res.status(400).send('Please fill in both email and password')
+    return res.redirect('/register');
   }
   
+  // check if email is already in users
   for (let user in users) {
     let sysEmail = users[user]['email']
     if(sysEmail === emailAdd) {
-      console.log('email in use already')
-      res.status(400)
-      return res.redirect('/urls');
+      res.status(400).send('email in use already')
+      return res.redirect('/register');
     }
   }
 
@@ -191,7 +194,7 @@ app.post('/register', (req, res) => {
   users[id] = {}
   users[id]['id'] = id
   users[id]['email'] = emailAdd;
-  users[id]['password'] = passwordAdd;
-  console.log(users)
+  users[id]['password'] = passwordEncrypt;
+
   res.redirect('/urls')
 });
