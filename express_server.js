@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
+const bodyParser = require("cookie-parser");
 const session = require("cookie-session");
 const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
@@ -96,12 +97,8 @@ app.get("/urls", (req, res) => {
   }
   let asd = req.session.user_ID
   let id = req.session['userID']
-  console.log('id',id)
-  console.log('swagg',asd)
 
   let userUrlObj = urlsForUser(id)
-
-  console.log(urlsForUser)
 
   const templateVars = { urls: userUrlObj };
   res.render("urls_index", templateVars);
@@ -149,7 +146,6 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log(loggedIn)
   let userID = req.session.user_id
   let userAcc = users[userID]
 
@@ -164,7 +160,6 @@ app.post("/login", (req, res) => {
 
   if(typeof userAcc == 'undefined')  {
     // res.render("urls_index", templateVars);
-    console.log(loggedIn)
     return res.status(403).send('No user with that email/pass')
   }
   sysEmail = userAcc['email']
@@ -172,11 +167,9 @@ app.post("/login", (req, res) => {
   if (inputEmail === sysEmail && bcrypt.compareSync(inputPass, userAcc['password'])) {
       templateVars['user'] = userAcc;
   } else  {
-    console.log(loggedIn)
     return res.status(403).send('No user with that email/pass')
   }
   loggedIn = true;
-  console.log(loggedIn)
 
   res.render("urls_index", templateVars); 
   res.redirect('/urls');
