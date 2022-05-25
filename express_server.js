@@ -108,7 +108,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  if (!loggedIn)  {
+    res.redirect("/login")
+  } else  {
+    res.render("urls_new");
+  }
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -215,5 +219,5 @@ app.post('/register', (req, res) => {
   users[id]['email'] = emailAdd;
   users[id]['password'] = passwordEncrypt;
 
-  res.redirect('/urls')
+  res.redirect('/login')
 });
