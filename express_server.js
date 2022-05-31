@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
-const bodyParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const session = require("cookie-session");
 const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
@@ -63,32 +63,12 @@ app.use(
 
 app.set("view engine", "ejs");
 
-app.get("/register", (req, res) => {
-  res.render("register");
-});
-
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
 app.get("/", (req, res) => {
   if(loggedIn) {
     res.redirect("/urls")
   } else {
     res.redirect("/login")
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
-
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls", (req, res) => {
@@ -102,6 +82,26 @@ app.get("/urls", (req, res) => {
 
   const templateVars = { urls: userUrlObj };
   res.render("urls_index", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls/new", (req, res) => {
