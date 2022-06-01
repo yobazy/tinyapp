@@ -7,9 +7,6 @@ const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
 const getUserByEmail = require('./helpers')
 
-//login status init
-let loggedIn = false;
-
 //generate random string function
 function generateRandomString() {
   let genString = Math.random().toString(36).slice(2,8)
@@ -186,9 +183,7 @@ app.post("/login", (req, res) => {
   } else  {
     return res.status(403).send('No user with that email/pass')
   }
-
-  globalThis.loggedIn = true;
-
+  
   res.render("urls_index", templateVars); 
   res.redirect('/urls');
 });
