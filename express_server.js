@@ -18,14 +18,6 @@ function generateRandomString() {
 
 //initial urlDatabase
 const urlDatabase = {
-  b6UTxQ: {
-        longURL: "https://www.tsn.ca",
-        userID: "aJ48lW"
-    },
-    i3BoGr: {
-        longURL: "https://www.google.ca",
-        userID: "aJ48l2"
-    }
 };
 
 //inital users
@@ -66,7 +58,6 @@ app.use(
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  console.log(req.session.user_id)
   if(req.session.user_id) {
     res.redirect("/urls")
   } else {
@@ -84,7 +75,6 @@ app.get("/urls", (req, res) => {
   // add userAcc based on ID
   let userAcc = users[id]
   let userUrlObj = urlsForUser(id)
-  console.log(userUrlObj)
 
   const templateVars = { urls: userUrlObj, user:userAcc };
   res.render("urls_index", templateVars);
@@ -121,7 +111,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  console.log(urlDatabase)
   let id = req.session['user_id']
   let userAcc = users[id]
   const templateVars = { 
@@ -139,9 +128,7 @@ app.get("/u/:shortURL", (req, res) => {
 //POST URL
 app.post("/urls", (req, res) => {
   let longUrl = req.body.longURL
-  console.log(longUrl)
   let shortUrl = generateRandomString()
-  console.log(urlDatabase)
   urlDatabase[shortUrl] = {}
   urlDatabase[shortUrl]['longURL'] = longUrl
   urlDatabase[shortUrl]['userID'] = req.session.user_id
@@ -151,18 +138,24 @@ app.post("/urls", (req, res) => {
 
 //POST DELETE URL
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  let id = req.session['user_id']
+  let userAcc = users[id]
+  const templateVars = { urls: urlDatabase, user: userAcc };
   delete templateVars['urls'][req.params.shortURL]
   res.render("urls_index", templateVars);
 });
 
+//POST URL
 app.post("/urls/:id", (req, res) => {
+  let id = req.session['user_id']
+  let userAcc = users[id]
+
   urlDatabase[req.body.shortURL]['longURL'] = req.body['longURL']
   for(let url in urlDatabase) {
     // if(user_id === )
   }
   let userURLS = req.params
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, user: userAcc };
   res.render("urls_index", templateVars);
 });
 
