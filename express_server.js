@@ -203,5 +203,5 @@ app.post('/register', (req, res) => {
   users[id]['email'] = emailAdd;
   users[id]['password'] = passwordEncrypt;
 
-  res.redirect('/login');
+  res.redirect('/urls');
 });
