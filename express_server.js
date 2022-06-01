@@ -5,9 +5,9 @@ const bodyParser = require("body-parser");
 const session = require("cookie-session");
 const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
-const getUserByEmail = require('./helpers')
-const urlsForUser = require('./helpers')
-const generateRandomString = require('./helpers')
+const { getUserByEmail } = require('./helpers');
+const { urlsForUser } = require('./helpers');
+const { generateRandomString } = require('./helpers');
 
 //initial urlDatabase
 const urlDatabase = {
@@ -42,7 +42,7 @@ app.get("/urls", (req, res) => {
 
   // add userAcc based on ID
   let userAcc = users[id]
-  let userUrlObj = urlsForUser(id)
+  let userUrlObj = urlsForUser(id, urlDatabase)
 
   const templateVars = { urls: userUrlObj, user:userAcc };
   res.render("urls_index", templateVars);

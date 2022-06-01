@@ -9,7 +9,7 @@ const getUserByEmail = function(email, database)  {
   };
 
 // Return urls for specific user
-const urlsForUser = function(id)  {
+const urlsForUser = function(id, urlDatabase)  {
     let userUrls = {};
     for (let url in urlDatabase)  {
       let urlCreator = urlDatabase[url]['userID']
@@ -26,4 +26,8 @@ const generateRandomString = function() {
   return genString
 }
 
-  module.exports = { getUserByEmail, urlsForUser, generateRandomString };
+module.exports = { 
+  getUserByEmail, 
+  urlsForUser, 
+  generateRandomString 
+};
