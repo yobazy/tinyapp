@@ -84,11 +84,16 @@ app.get("/urls/new", (req, res) => {
 // GET SPECIFIC URL PAGE
 app.get("/urls/:shortURL", (req, res) => {
   let id = req.session['user_id'];
+  console.log(id)
+  console.log(users)
   let userAcc = users[id];
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]['longURL'],
-    user: userAcc };
+    user: userAcc 
+  };
+  console.log(templateVars)
+  console.log(userAcc)
   res.render("urls_show", templateVars);
 });
 
@@ -147,9 +152,11 @@ app.post("/login", (req, res) => {
     return res.status(403).send('Please input email and pass');
   }
   if (typeof userID === 'undefined')  {
-    // res.render("urls_index", templateVars);
     return res.status(403).send('No user with that email');
   }
+
+  req.session.user_id = userID
+
   let userUrls = urlsForUser(userID, urlDatabase)
   const templateVars = {
     urls: userUrls
