@@ -62,13 +62,11 @@ app.get("/", (req, res) => {
   }
 });
 
+// GET URLS
 app.get("/urls", (req, res) => {
-  //check if res.cookie is there (FIX)
-  // if (!req.session.userID)  {
-  //   res.status(400).send('please log in')
-  // }
 
   let id = req.session['user_id']
+
   // add userAcc based on ID
   let userAcc = users[id]
   let userUrlObj = urlsForUser(id)
@@ -77,10 +75,12 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// GET REGISTER PAGE
 app.get("/register", (req, res) => {
   res.render("register");
 });
 
+// GET LOGIN PAGE
 app.get("/login", (req, res) => {
   res.render("login");
 });
@@ -93,10 +93,12 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+// GET HELLO WORLD PAGE
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+// GET NEW URL PAGE
 app.get("/urls/new", (req, res) => {
   let userAcc = users[req.session.user_id]
   const templateVars = { user: userAcc }
@@ -107,6 +109,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
+// GET SPECIFIC URL PAGE
 app.get("/urls/:shortURL", (req, res) => {
   let id = req.session['user_id']
   let userAcc = users[id]
@@ -183,7 +186,7 @@ app.post("/login", (req, res) => {
   } else  {
     return res.status(403).send('No user with that email/pass')
   }
-  
+
   res.render("urls_index", templateVars); 
   res.redirect('/urls');
 });
