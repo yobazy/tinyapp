@@ -1,4 +1,4 @@
-
+// Get user info by email
 const getUserByEmail = function(email, database)  {
     for(let user in database) {
       if(database[user]['email'] === email) {
@@ -8,6 +8,7 @@ const getUserByEmail = function(email, database)  {
     return undefined;
   };
 
+// Return urls for specific user
 const urlsForUser = function(id)  {
     let userUrls = {};
     for (let url in urlDatabase)  {
@@ -19,4 +20,10 @@ const urlsForUser = function(id)  {
     return userUrls;
   }
 
-  module.exports = { getUserByEmail, urlsForUser};
+//generate random string function
+const generateRandomString = function() {
+  let genString = Math.random().toString(36).slice(2,8)
+  return genString
+}
+
+  module.exports = { getUserByEmail, urlsForUser, generateRandomString };

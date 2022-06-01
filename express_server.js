@@ -6,43 +6,16 @@ const session = require("cookie-session");
 const { redirect } = require("express/lib/response");
 const bcrypt = require('bcryptjs');
 const getUserByEmail = require('./helpers')
-
-//generate random string function
-function generateRandomString() {
-  let genString = Math.random().toString(36).slice(2,8)
-  return genString
-}
+const urlsForUser = require('./helpers')
+const generateRandomString = require('./helpers')
 
 //initial urlDatabase
 const urlDatabase = {
 };
 
-//inital users
-// CAN REMOVE THIS
-const users = {} 
-//   "userRandomID": {
-//     id: "userRandomID", 
-//     email: "user@example.com", 
-//     password: "purple-monkey-dinosaur"
-//   },
-//  "user2RandomID": {
-//     id: "user2RandomID", 
-//     email: "user2@example.com", 
-//     password: "dishwasher-funk"
-//   }
-// }
+//initalize users database
+const users = {};
 
-//move to helpers.js
-function urlsForUser(id)  {
-  let userUrls = {};
-  for (let url in urlDatabase)  {
-    let urlCreator = urlDatabase[url]['userID']
-    if (id === urlCreator)  {
-      userUrls[url] = urlDatabase[url]
-    }
-  }
-  return userUrls;
-}
 
 app.use(bodyParser.urlencoded({extended: true}));
 
