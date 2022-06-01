@@ -9,9 +9,8 @@ const { getUserByEmail } = require('./helpers');
 const { urlsForUser } = require('./helpers');
 const { generateRandomString } = require('./helpers');
 
-//initial urlDatabase
-const urlDatabase = {
-};
+//initialize urlDatabase
+const urlDatabase = {};
 
 //initalize users database
 const users = {};
