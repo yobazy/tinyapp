@@ -121,13 +121,14 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   let id = req.session['user_id'];
   let userAcc = users[id];
-
+  console.log(urlDatabase)
+  urlDatabase[req.body.shortURL] = {}
   urlDatabase[req.body.shortURL]['longURL'] = req.body['longURL'];
-  for (let url in urlDatabase) {
-    // if(user_id === )
-  }
-  let userURLS = req.params;
-  const templateVars = { urls: urlDatabase, user: userAcc };
+  urlDatabase[req.body.shortURL]['userID'] = id
+  let userUrls = urlsForUser(id, urlDatabase);
+  console.log(urlDatabase)
+  console.log(userUrls)
+  const templateVars = { urls: userUrls, user: userAcc };
   res.render("urls_index", templateVars);
 });
 
@@ -149,8 +150,9 @@ app.post("/login", (req, res) => {
     // res.render("urls_index", templateVars);
     return res.status(403).send('No user with that email');
   }
+  let userUrls = urlsForUser(userID, urlDatabase)
   const templateVars = {
-    urls: urlDatabase
+    urls: userUrls
   };
   // compare password using bcrypt
   if (bcrypt.compareSync(inputPass, userAcc['password'])) {
